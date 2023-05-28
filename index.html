@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Crystal Game</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="jquery-3.6.4.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<h1>BLABLABLA</h1>
+			<div class="level-selection">
+			<h3>Select a level:</h3>
+			<select id="level">
+				<option value="easy">Easy</option>
+				<option value="average">Average</option>
+				<option value="hard">Hard</option>
+			</select>
+		</div>
+		<div id="start">
+			<h1>START</h1>
+		</div>
+		<div class="crystal-container">
+			<div class="crystal" id="crystal1"></div>
+			<div class="crystal" id="crystal2"></div>
+			<div class="crystal" id="crystal3"></div>
+			<div class="crystal" id="crystal4"></div>
+			<div class="crystal" id="crystal5"></div>
+			<div class="crystal" id="crystal6"></div>		
+		</div>
+		<div class="question-container">
+			<div class="question-popup">
+				<button class="close-btn">&times;</button>
+				<h2 id="message">Question</h2>
+				<p>Question text goes here.</p>
+				<div class="answer-container">
+					<button class="answer">Answer 1</button>
+					<button class="answer">Answer 2</button>
+					<button class="answer">Answer 3</button>
+					<button class="answer">Answer 4</button>
+				</div>
+			</div>
+		</div>
+		<div class="score-container">
+			<p>Score: <span id="score">0</span></p>
+			<p><span id="timer">Time left: </span></p>
+			<p>Coins: <span id="coins">0</span></p>
+		</div>
+	</div>
+
+	<script>
+		var score = 0;
+		var timeLeft;
+		var timerId;
+
+		function move() {
+		  var containerWidth = $('.container').width();
+		  var containerHeight = $('.container').height();
+		  var crystalSize = 100;
+
+		  $('.crystal').each(function() {
+		    var x = Math.floor(Math.random() * (containerWidth - crystalSize));
+		    var y = Math.floor(Math.random() * (containerHeight - crystalSize));
+		    x = Math.max(x, 100); // Ensure x is not negative
+		    y = Math.max(y, 250); // Ensure y is not negative
+		    $(this).css({top: y, left: x});
+		  });
+		}
+
+		function updateScore(score) {
+
+		  $('#score').text('Score: ' + score);
+		}
+
+		function startTimer() {
+		  timerId = setInterval(function() {
+		    timeLeft--;
+		    $('#timer').text('Time left: ' + timeLeft + ' seconds');
+		    if (timeLeft == 0) {
+		      clearInterval(timerId);
+		      $(".question-container").show();
+		      $("#message").html("<h4>Answer the question correctly to get "+score+" coins</h4>");
+		    }
+		  }, 800);
+		}
+
+		$(document).ready(function() {
+		$(".question-container").hide();
+		$('.close-btn').click(function() {
+		$(".question-container").hide();
+		});
+
+		$('#start').click(function() {
+			var level = $('#level').val();
+			var numCrystals = 6;
+			timeLeft = 30
+			if (level == 'average') {
+				numCrystals = 4;
+				timeLeft = 20
+			} else if (level == 'hard') {
+				numCrystals = 2;
+				timeLeft = 10
+
+			}
+			$('.crystal').slice(numCrystals).hide();
+		    startTimer();
+		    $('#start').hide();
+		    $(".level-selection").hide();
+		});
+		$('.crystal').click(function() {
+		var containerWidth = $('.container').width();
+		var containerHeight = $('.container').height();
+		var crystalSize = 100;
+		score++;
+		updateScore(score);
+		var x = Math.random() * (containerWidth - crystalSize);
+		var y = Math.random() * (containerHeight - crystalSize);
+		x = Math.max(x, 100); // Ensure x is not negative
+		y = Math.max(y, 250); // Ensure y is not negative
+		$(this).css({top: y, left: x});
+	});
+		});
+
+
+	</script>
+</body>
+</html>
